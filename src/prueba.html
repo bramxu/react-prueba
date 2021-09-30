@@ -1,0 +1,233 @@
+<html>
+
+<head>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+	<style>
+		button {
+			width: 100%
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2">
+				<fieldset>
+					<legend>New Item</legend>
+					<form>
+						<div class="mb-3">
+							<label for="exampleInputEmail1" class="form-label">Name</label>
+							<input type="text" class="form-control" id="txtNewItem" aria-describedby="txtNewItem">
+						</div>
+						<div class="mb-3">
+							<label for="exampleInputPassword1" class="form-label">Description</label>
+							<input type="text" class="form-control" id="txtDescriptiontItem">
+						</div>
+						<div class="mb-3">
+							<label for="exampleInputPassword1" class="form-label">Price</label>
+							<input type="number" class="form-control" id="txtPriceItem">
+						</div>
+						<button type="button" class="btn btn-primary pull-right" onclick="addItem()">Save</button>
+					</form>
+				</fieldset>
+			</div>
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-10 mt-3">
+						<input type="text" id='txtSearch' class="search form-control" placeholder="--search by name--">
+					</div>
+					<div class="col-md-2 mt-3">
+						<button type="button" class="btn btn-primary" onclick="search()">Search</button>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<fieldset style="margin-top: 20px">
+						<table id="tableList" class="table">
+							<thead class="thead-dark">
+								<tr>
+									<th scope="col">Name</th>
+									<th scope="col">Description</th>
+									<th scope="col">Price</th>
+									<th scope="col"></th>
+									<th scope="col"></th>
+								</tr>
+							</thead>
+						</table>
+					</fieldset>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<fieldset>
+					<legend>Detail</legend>
+					<div class="row">
+						<form>
+							<div class="mb-12">
+								<p for="exampleInputEmail1" class="form-label" id="lblNameDetail">Name</p>
+							</div>
+							<div class="mb-12">
+								<p for="exampleInputEmail1" class="form-label" id="lblDescriptionDetail">Description</p>
+							</div>
+							<div class="mb-12">
+								<p for="exampleInputEmail1" class="form-label" id="lblPriceDetail">Price</p>
+							</div>
+						</form>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+
+
+
+<script>
+	let items = [];
+	let itemsFiltered = [];
+	class Item {
+		constructor(id, name, description, price) {
+			this.id = id;
+			this.name = name;
+			this.description = description;
+			this.price = price;
+			this.isSelected = false;
+		}
+		select(value) {
+			this.isSelected = value;
+		}
+	}
+
+
+
+
+
+	function addItem() {
+		var txtNewitem = document.getElementById("txtNewItem").value;
+		var txtDescriptiontItem = document.getElementById("txtDescriptiontItem").value;
+		var txtPriceItem = document.getElementById("txtPriceItem").value;
+		if (!txtNewitem || !txtDescriptiontItem || !txtPriceItem) {
+			return;
+		}
+		let item = new Item(this.getRandomArbitrary(), txtNewitem, txtDescriptiontItem, txtPriceItem);
+		items.push(item);
+		renderTable();
+		initView();
+	}
+
+	function renderTable() {
+		var mytable =
+			"<table class='table col-md-12'><thead class='thead-dark'><tr><th scope='col'>Name</th><th scope='col'>Description</th><th scope='col'>Price</th><th scope='col'></th><th scope='col'></th></tr></thead>";
+		for (var i of this.getItemsFiltered()) {
+			if (i.isSelected) {
+				mytable += "<tr><td class='col-md-2'><input type='text'  class='form-control' data-val-name value='" + i
+					.name +
+					"' /></td class='col-md-2'><td class='col-md-2'><input class='form-control' type='text' data-val-description value='" +
+					i.description +
+					"' /></td><td class='col-md-2'><input  class='form-control' type='text' data-val-price value='" + i
+					.price + "' /></td><td class='col-md-2'><button class='btn btn-secondary'   onclick=\"cancelEdit(" + i
+					.id +
+					")\">Cancel</button></td><td class='col-md-2'><button  class='btn btn-primary' onclick=\"saveItem(" + i
+					.id + ")\">Save</button></td><tr>";
+			} else {
+				mytable += "<tr><td class='col-md-2'><a href='#' onclick=\"viewItem(" + i.id + ")\">" + i.name +
+					"</a></td><td class='col-md-2'>" + i.description + "</td><td class='col-md-2'>" + i.price +
+					"</td><td class='col-md-2'><button class='btn btn-secondary' onclick=\"editItem(" + i.id +
+					")\">Edit</button></td><td class='col-md-2'><button class='btn btn-danger'  onclick=\"removeItem(" + i
+					.id + ")\">Remove</button></td><tr>";
+			}
+		}
+		mytable += "</table>";
+		document.getElementById("tableList").innerHTML = mytable;
+	}
+
+	function getItemsFiltered() {
+		var seachText = document.getElementById("txtSearch").value;
+
+		if (seachText) {
+			return items.filter(element => element.name.toUpperCase().indexOf(seachText.toUpperCase()) >= 0);
+		}
+		return items;
+	}
+
+	function initView() {
+		document.getElementById("txtNewItem").value = "";
+		document.getElementById("txtDescriptiontItem").value = "";
+		document.getElementById("txtPriceItem").value = "";
+	}
+
+	function viewItem(itemId) {
+		let item = getItem(itemId);
+		if (item) {
+			document.getElementById("lblNameDetail").innerHTML = "Name " + item.name;
+			document.getElementById("lblDescriptionDetail").innerHTML = "Description " + item.description;
+			document.getElementById("lblPriceDetail").innerHTML = "Price " + item.price;
+		}
+	}
+
+	function editItem(itemId) {
+		unSelectedAllItems();
+		let item = getItem(itemId);
+		if (item) {
+			item.select(true);
+			this.renderTable();
+		}
+	}
+
+	function unSelectedAllItems() {
+		items.forEach(function (item) {
+			item.select(false);
+		});
+	}
+
+	function removeItem(itemId) {
+		var item = getItem(itemId);
+		if (item) {
+			var index = items.indexOfId(item.id);
+			console.log(index);
+			items.splice(index, 1);
+			renderTable();
+		}
+	}
+
+	function cancelEdit(itemId) {
+		var item = getItem(itemId);
+		if (item) {
+			item.select(false);
+			renderTable();
+		}
+	}
+
+	function saveItem(itemId) {
+		var item = getItem(itemId);
+		if (item) {
+			item.name = document.querySelectorAll('[data-val-name]')[0].value;
+			item.description = document.querySelectorAll('[data-val-description]')[0].value;
+			item.price = document.querySelectorAll('[data-val-price]')[0].value;
+			item.select(false);
+			renderTable();
+		}
+	}
+
+	function search() {
+		this.renderTable();
+	}
+
+	function getItem(id) {
+		return items.find(element => element.id === id);
+	}
+
+	function getRandomArbitrary() {
+		return Math.floor(Math.random() * 100);
+	}
+	Array.prototype.indexOfId = function (id) {
+		for (var i = 0; i < this.length; i++)
+			if (this[i].id === id)
+				return i;
+		return -1;
+	}
+</script>
+
+</html>
