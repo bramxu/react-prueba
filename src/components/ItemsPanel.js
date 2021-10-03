@@ -1,15 +1,17 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import ItemAdd from "./ItemAdd/ItemAdd"
 import ItemsTable from "./ItemsTable/ItemsTable"
 import ItemSelected from "./ItemSelected/ItemSelected"
 import ItemSearchBar from "./ItemSearchBar/ItemSearchBar"
 import {default as UUID} from "node-uuid";
 
+const KEY = "ItemsPanel.list";
 
 const ItemsPanel = () => {
     const [items, setItems] = useState([]);
-
     const [itemSelected, setItemSelected] = useState(null)
+    const [itemPreSearched, setPreSearchedItems] = useState(null)
+
 
     const handleSetItem = (item) => {
         setItems((prevItems) => {
@@ -39,6 +41,15 @@ const ItemsPanel = () => {
             setItemSelected(itemSelected)
     }
 
+    const handleSearchItems = (itemsSearched, shouldRestoreItems) => {
+        if(shouldRestoreItems){
+            setItems(itemPreSearched)
+        } else {
+            setPreSearchedItems(items)
+            setItems(itemsSearched)
+        }
+    }   
+
     return(
         <Fragment>
             <div className="container">
@@ -53,7 +64,7 @@ const ItemsPanel = () => {
                         <div className="container">
                             <div className="row">
                                 <div className="col-md-12 w-100">
-                                    <ItemSearchBar />
+                                    <ItemSearchBar items={items} handleSearchItems={handleSearchItems} />
                                 </div>
                                 <div className="col-md-12 w-100">
                                     <ItemsTable 
