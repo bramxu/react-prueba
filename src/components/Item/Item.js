@@ -1,7 +1,17 @@
 import React from "react"
 
-const Item = (item) => {
-    const {name, description, price} = [...item]
+class Item extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            id: props.id,
+            name: props.name,
+            description:  props.description,
+            price: props.price, 
+            isSelected: false
+        };
+    }
+
 }
 
 export default Item;

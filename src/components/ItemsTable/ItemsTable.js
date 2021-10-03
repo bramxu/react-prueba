@@ -1,7 +1,20 @@
 import React, { Fragment } from "react";
+import ItemsTableRow from "../ItemsTableRow/ItemsTableRow"
+
 
 const ItemsTable = (props) => {
-    (props) ?? console.log(props) //no llegan los props
+    const items = props.items
+
+    const handleItemSelected = (item) => {
+        props.handleItemSelected(item)
+    }
+    const handleDeleteItem = (id) => {
+        props.handleDeleteItem(id)
+    }
+    const handleUpdateItem = (item) => {
+        props.handleUpdateItem(item)
+    }
+
     return(
         <Fragment>
             <table id="tableList" className="table">
@@ -15,14 +28,14 @@ const ItemsTable = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    { props.items && props.items.map((item) => (
-                        <tr>
-                            <td>{item.name}</td>
-                            <td>{item.description}</td>
-                            <td>{item.price}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                    { items && items.map((item, index) => (
+                        <ItemsTableRow 
+                            key={index} 
+                            item={item} 
+                            handleItemSelected={handleItemSelected}
+                            handleDeleteItem={handleDeleteItem}
+                            handleUpdateItem={handleUpdateItem}
+                        />
                     ))}
                 </tbody>
             </table>

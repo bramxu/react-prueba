@@ -1,33 +1,34 @@
 import React, { Fragment } from "react";
 
 const ItemSelected= (props) => {
+    const item = props.item 
     return(
         <Fragment>
-            <article class="item">  
+            <article className="item">  
                 <h2>Detail</h2>
-                <div class="row">
+                <div className="row">
                     <form>
-                        <div class="mb-12">
-                            <p class="item__label">
+                        <div className="mb-12">
+                            <p className="item__label">
                                 Name: 
-                                <span class="item__name">
-                                    { item.name }
+                                <span className="item__name">
+                                    { item && item.name }
                                 </span>
                             </p>
                         </div>
-                        <div class="mb-12">
-                            <p class="item__label">
+                        <div className="mb-12">
+                            <p className="item__label">
                                 Description:
-                                <span class="item__description">
-                                    { item.description }
+                                <span className="item__description">
+                                    { item && item.description }
                                 </span>
                             </p>
                         </div>
-                        <div class="mb-12">
-                            <p class="item__label">
+                        <div className="mb-12">
+                            <p className="item__label">
                                 Price:
-                                <span class="item__price">
-                                    { item.price }
+                                <span className="item__price">
+                                    { item && item.price }
                                 </span>
                             </p>
                         </div>

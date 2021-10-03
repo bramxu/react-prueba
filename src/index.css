@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.item--selected{
+  outline: none;
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  color: blue;
+}
+
+
+
+.item__table__input{
+  max-width: 100px;
+}
